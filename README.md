@@ -1,10 +1,18 @@
 development build
 ```
+npm run build
+
+or
+
 npx webpack --mode=development --watch
 ```
 
 production build
 ```
+npm start
+
+or
+
 npx webpack --mode=production
 ```
 
