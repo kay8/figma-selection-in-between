@@ -1,0 +1,7 @@
+{
+  "name": "SelectionInBetween",
+  "id": "856135048947731218",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html"
+}
