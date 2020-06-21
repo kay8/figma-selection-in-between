@@ -4,32 +4,47 @@ import './ui.css'
 
 declare function require(path: string): any
 
-class App extends React.Component {
-  textbox: HTMLInputElement
+const App: React.FC = ({}) => {
+  const textbox = React.useRef<HTMLInputElement>(undefined);
 
-  countRef = (element: HTMLInputElement) => {
-    if (element) element.value = '5'
-    this.textbox = element
-  }
+  const countRef = React.useCallback((element: HTMLInputElement) => {
+    if (element) element.value = '5';
+    textbox.current = element;
+  }, []);
 
-  onCreate = () => {
-    const count = parseInt(this.textbox.value, 10)
-    parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
-  }
+  const onCreate = React.useCallback(() => {
+      const count = parseInt(textbox.current.value, 10);
+      parent.postMessage({pluginMessage: {type: 'create-rectangles', count}}, '*');
+  }, []);
 
-  onCancel = () => {
-    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-  }
+  const onCancel = React.useCallback(() => {
+      parent.postMessage({pluginMessage: {type: 'cancel'}}, '*');
+  }, []);
 
-  render() {
-    return <div>
+  const OnTest = React.useCallback(() => {
+    parent.postMessage({pluginMessage: {type: 'test'}}, '*');
+  }, []);
+
+  React.useEffect(() => {
+    // This is how we read messages sent from the plugin controller
+    window.onmessage = (event) => {
+        const { type, message } = event.data.pluginMessage;
+        if (type === 'create-rectangles') {
+            console.log(`Figma Says: ${message}`);
+        };
+    }
+  }, []);
+
+  return (
+    <div>
       <img src={require('./logo.svg')} />
       <h2>Rectangle Creator</h2>
       <p>Count: <input ref={this.countRef} /></p>
       <button id="create" onClick={this.onCreate}>Create</button>
-      <button onClick={this.onCancel}>Cancel</button>
+      <button id="create" onClick={this.onCreate}>Create</button>
+      <button onClick={this.OnTest}>Test</button>
     </div>
-  }
+  )
 }
 
 ReactDOM.render(<App />, document.getElementById('react-page'))
