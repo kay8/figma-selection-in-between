@@ -5,20 +5,8 @@ import './ui.css';
 declare function require(path: string): any;
 
 const App: React.FC = () => {
-  const textbox = React.useRef<HTMLInputElement | null>(null);
-
-  const countRef = React.useCallback((element: HTMLInputElement) => {
-    if (element) element.value = '5';
-    textbox.current = element;
-  }, []);
-
-  const onCreate = React.useCallback(() => {
-    if (!textbox.current) return;
-    const count = parseInt(textbox.current.value, 10);
-    parent.postMessage(
-      { pluginMessage: { type: 'create-rectangles', count } },
-      '*'
-    );
+  const onSelect = React.useCallback(() => {
+    parent.postMessage({ pluginMessage: { type: 'select' } }, '*');
   }, []);
 
   const onCancel = React.useCallback(() => {
@@ -28,14 +16,14 @@ const App: React.FC = () => {
   return (
     <div>
       <img src={require('./logo.svg')} />
-      <h2>Rectangle Creator</h2>
-      <p>
-        Count: <input ref={countRef} />
-      </p>
-      <button className="button__action" onClick={onCreate}>
-        Create
-      </button>
-      <button onClick={onCancel}>Cancel</button>
+      <h2 className="content-title">SelectionInBetween</h2>
+      <p className="description">Select elements between the 2 selections</p>
+      <div className="cta-group">
+        <button className="button__action mr16" onClick={onSelect}>
+          Select
+        </button>
+        <button onClick={onCancel}>Cancel</button>
+      </div>
     </div>
   );
 };
